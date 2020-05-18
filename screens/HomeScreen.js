@@ -23,6 +23,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 class HomeScreen extends Component {
+  static navigationOptions = {
+    headerShown: false,
+  };
+
   constructor(props) {
     super(props)
 
@@ -107,14 +111,19 @@ class HomeScreen extends Component {
                 style={{ paddingBottom: 30 }}
               >
                 {cards.map(card => (
-                  <Card
-                    key={card.title}
-                    title={card.title}
-                    image={card.image}
-                    logo={card.logo}
-                    caption={card.caption}
-                    subtitle={card.subtitle}
-                  />
+                  <TouchableOpacity key={card.title} onPress={() => {
+                    this.props.navigation.push("Section", {
+                      section: card,
+                    });
+                  }}>
+                    <Card
+                      title={card.title}
+                      image={card.image}
+                      logo={card.logo}
+                      caption={card.caption}
+                      subtitle={card.subtitle}
+                    />
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
               <Subtitle>Popular Courses</Subtitle>
@@ -146,7 +155,8 @@ const RootView = styled.View`
 const Container = styled.View`
   flex: 1;
   background-color: #F0F3F5;
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 `;
 
 const AnimatedContainer = Animated.createAnimatedComponent(Container);
