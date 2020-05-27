@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { ScrollView, SafeAreaView, TouchableOpacity, Animated, Easing, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
 // import { Ionicons } from '@expo/vector-icons'
 import Card from '../components/Card';
 import Logo from '../components/Logo.js';
@@ -9,6 +11,39 @@ import { NotificationIcon } from '../components/Icons';
 import Course from '../components/Course';
 import Menu from '../components/Menu';
 import Avatar from '../components/Avatar';
+
+const CardsQuery = gql`
+  {
+    cardsCollection {
+      items {
+        title
+        subtitle
+        image {
+          title
+          description
+          contentType
+          fileName
+          size
+          url
+          width
+          height
+        }
+        subtitle
+        caption
+        logo {
+          title
+          description
+          contentType
+          fileName
+          size
+          url
+          width
+          height
+        }
+      }
+    }
+  }
+`;
 
 function mapStateToProps(state) {
   return { action: state.action, name: state.name };
@@ -79,7 +114,7 @@ class HomeScreen extends Component {
               <TitleBar>
                 <TouchableOpacity
                   onPress={this.props.openMenu}
-                style={{ position: 'absolute', top: 0, left: 20 }}
+                  style={{ position: 'absolute', top: 0, left: 20 }}
                 >
                   <Avatar source={require(`../assets/avatar-default.jpg`)} />
                 </TouchableOpacity>
@@ -110,6 +145,32 @@ class HomeScreen extends Component {
                 showsHorizontalScrollIndicator={false}
                 style={{ paddingBottom: 30 }}
               >
+                {/* <Query query={CardsQuery}>
+                  {({ loading, error, data }) => {
+                    if (loading) return <Message>Loading...</Message>;
+                    if (error) return <Message>Error...</Message>;
+
+                    return (
+                      <CardsContainer>
+                        {data.cardsCollection.items.map(card => (
+                          <TouchableOpacity key={card.title} onPress={() => {
+                            this.props.navigation.push("Section", {
+                              section: card,
+                            });
+                          }}>
+                            <Card
+                              title={card.title}
+                              image={card.image}
+                              logo={card.logo}
+                              caption={card.caption}
+                              subtitle={card.subtitle}
+                            />
+                          </TouchableOpacity>
+                        ))}
+                      </CardsContainer>
+                    )
+                  }}
+                </Query> */}
                 {cards.map(card => (
                   <TouchableOpacity key={card.title} onPress={() => {
                     this.props.navigation.push("Section", {
@@ -165,6 +226,18 @@ const TitleBar = styled.View`
   width: 100%;
   margin-top: 50px;
   padding-left: 80px;
+`;
+
+const Message = styled.Text`
+  margin: 20px;
+  color: #bebece;
+  font-size: 15px;
+  font-weight: 500;
+`;
+
+const CardsContainer = styled.View`
+  flex-direction: row;
+  padding-right: 12px;
 `;
 
 // const Avatar = styled.Image`
