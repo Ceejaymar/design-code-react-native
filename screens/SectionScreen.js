@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, StatusBar } from 'react-native';
+import { TouchableOpacity, StatusBar, Linking } from 'react-native';
+import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
 import styled from 'styled-components';
 
@@ -47,6 +48,20 @@ class SectionScreen extends Component {
             />
           </CloseView>
         </TouchableOpacity>
+        <Content>
+          <WebView source={{ 
+            html: htmlContent + htmlStyles }} 
+            scalesPageToFit={false} 
+            scrollEnabled={false} 
+            ref="webview"
+            onNavigationStateChange={event => {
+              if(event.url !== "about:blank") {
+                this.refs.webview.stopLoading();
+                Linking.openURL(event.url);
+              }
+            }} 
+          />
+        </Content>
         {/* <Text>{section.title}</Text>
 
         <Button title="Close" onPress={() => {
@@ -58,6 +73,29 @@ class SectionScreen extends Component {
 }
 
 export default SectionScreen;
+
+const htmlContent = `
+  <h2>This is a title</h2>
+  <p>This <strong>is</strong> a <a href="https://carlosmartinez.dev">link</a></p>
+  <img src="https://cl.ly/8861f359ed6d/download/Wave14.jpg">
+`;
+
+const htmlStyles = `
+  <style>
+    * {
+      font-family: -apple-system, Roboto;
+      margin: 0;
+      padding: 0;
+      background-color: transparent;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+  </style>
+`;
 
 const Container = styled.View`
   flex: 1;
@@ -121,4 +159,9 @@ const CloseView = styled.View`
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
   justify-content: center;
   align-items: center;
+`;
+
+const Content = styled.View`
+  height: 100%;
+  padding: 20px;
 `;

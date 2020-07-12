@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, SafeAreaView, TouchableOpacity, Animated, Easing, StatusBar } from 'react-native';
+import { ScrollView, SafeAreaView, TouchableOpacity, Animated, Easing, StatusBar, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
@@ -73,6 +73,8 @@ class HomeScreen extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     this.toggleMenu();
+
+    if (Platform.OS === "android") StatusBar.setBarStyle("light-content", true);
   }
 
   toggleMenu = () => {
@@ -139,7 +141,7 @@ class HomeScreen extends Component {
                   <Logo key={logo.text} image={logo.image} text={logo.text} />
                 ))}
               </ScrollView>
-              <Subtitle>Continue Learning</Subtitle>
+              <Subtitle>{"Continue Learning".toUpperCase()}</Subtitle>
               <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
@@ -187,19 +189,21 @@ class HomeScreen extends Component {
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-              <Subtitle>Popular Courses</Subtitle>
-              {courses.map(course => (
-                <Course
-                  key={course.title}
-                  image={course.image}
-                  title={course.title}
-                  subtitle={course.subtitle}
-                  avatar={course.avatar}
-                  logo={course.logo}
-                  caption={course.caption}
-                  author={course.author}
-                />
-              ))}
+              <Subtitle>{"Popular Courses".toUpperCase()}</Subtitle>
+              <CoursesContainer>
+                {courses.map(course => (
+                  <Course
+                    key={course.title}
+                    image={course.image}
+                    title={course.title}
+                    subtitle={course.subtitle}
+                    avatar={course.avatar}
+                    logo={course.logo}
+                    caption={course.caption}
+                    author={course.author}
+                  />
+                ))}
+              </CoursesContainer>
             </ScrollView>
           </SafeAreaView>
         </AnimatedContainer>
@@ -237,7 +241,7 @@ const Message = styled.Text`
 
 const CardsContainer = styled.View`
   flex-direction: row;
-  padding-right: 12px;
+  padding: 0 12px;
 `;
 
 // const Avatar = styled.Image`
@@ -266,6 +270,12 @@ const Subtitle = styled.Text`
   margin-left: 20px;
   margin-top: 20px;
   text-transform: uppercase;
+`;
+
+const CoursesContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-left: 10; 
 `;
 
 const logos = [

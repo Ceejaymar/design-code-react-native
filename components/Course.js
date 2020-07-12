@@ -1,27 +1,64 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Dimensions } from 'react-native';
 
-const Course = ({ image, logo, subtitle, title, avatar, caption, author }) => (
-  <Container>
-    <Cover>
-      <Image source={image} />
-      <Logo source={logo} resizeMode="contain" />
-      <Subtitle>{subtitle}</Subtitle>
-      <Title>{title}</Title>
-    </Cover>
-    <Content>
-      <Avatar source={avatar} />
-      <Caption>{caption}</Caption>
-      <Author>Taught by {author}</Author>
-    </Content>
-  </Container>
-);
+const screenWidth = Dimensions.get('window').width;
+
+function getCourseWidth(screenWidth) {
+  let cardWidth = screenWidth - 40;
+
+  if (screenWidth >= 768) {
+    cardWidth = (screenWidth - 60) / 2;
+  }
+
+  if (screenWidth >= 1024) {
+    cardWidth = (screenWidth - 80) / 3;
+  }
+  return cardWidth;
+}
+
+class Course extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      cardWidth: getCourseWidth(screenWidth),
+    }
+  }
+
+  componentDidMount() {
+    Dimensions.addEventListener("change", this.adaptLayout);
+  }
+
+  adaptLayout = dimensions => {
+    this.setState({ cardWidth: getCourseWidth(dimensions.window.width)});
+  }
+
+  render() {
+    const { image, logo, subtitle, title, avatar, caption, author } = this.props;
+    return (
+      <Container style={{ width: this.state.cardWidth }}>
+        <Cover>
+          <Image source={image} />
+          <Logo source={logo} resizeMode="contain" />
+          <Subtitle>{subtitle}</Subtitle>
+          <Title>{title}</Title>
+        </Cover>
+        <Content>
+          <Avatar source={avatar} />
+          <Caption>{caption}</Caption>
+          <Author>Taught by {author}</Author>
+        </Content>
+      </Container>
+    )
+  }
+}
 
 const Container = styled.View`
   width: 335px;
   height: 335px;
   background-color: white;
-  margin: 10px 20px;
+  margin: 10px 10px;
   border-radius: 14px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 `;

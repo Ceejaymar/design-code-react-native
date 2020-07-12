@@ -5,6 +5,13 @@ import styled from 'styled-components';
 import { Ionicons } from "@expo/vector-icons";
 import MenuItem from './MenuItem';
 
+const screenWidth = Dimensions.get('window').width;
+let cardWidth = screenWidth;
+
+if (screenWidth > 500) {
+  cardWidth = 500;
+}
+
 function mapStateToProps(state) {
   return { action: state.action }
 }
@@ -91,7 +98,8 @@ class Menu extends Component {
 const Container = styled.View`
   position: absolute;
   background-color: white;
-  width: 100%;
+  align-self: center;
+  width: ${cardWidth};
   height: 100%;
   z-index: 100;
   border-radius: 10px;
